@@ -6,36 +6,31 @@
 
 #include "motor.h"
 
-void Motor::exitSafeStart(uint8_t smcDeviceNumber)
+void Motor::exitSafeStart()
 {
-    Wire.beginTransmission(smcDeviceNumber);
-    Wire.write(0x83); // Exit safe start
-    Wire.endTransmission();
+    myWire.beginTransmission(smcDeviceNumber);
+    myWire.write(0x83); // Exit safe start
+    myWire.endTransmission();
 }
 
-Motor::Motor(const uint8_t _smcDeviceNumber, const int16_t _maxSpeed, const int16_t _minSpeed, const uint8_t _SDAPin, const uint8_t _SCLPin) : smcDeviceNumber(_smcDeviceNumber), maxSpeed(_maxSpeed), minSpeed(_minSpeed), SDAPin(_SDAPin), SCLPin(_SCLPin)
-{
-    Wire.setSDA(SDAPin);
-    Wire.setSCL(SCLPin);
-    Wire.begin();
-}
+Motor::Motor(TwoWire& _myWire ,const uint8_t _smcDeviceNumber, const int16_t _maxSpeed, const int16_t _minSpeed) : myWire(_myWire) ,smcDeviceNumber(_smcDeviceNumber), maxSpeed(_maxSpeed), minSpeed(_minSpeed)
+{}
 
-void Motor::setMotorSpeed(uint8_t smcDeviceNumber, int16_t speed)
+void Motor::setMotorSpeed(int16_t speed)
 {
+    if (speed > maxSpeed || speed < minSpeed)
+        return;
+
     uint8_t cmd = 0x85; // Motor forward
     if (speed < 0)
     {
         cmd = 0x86; // Motor revers
         speed = -speed;
     }
-    Wire.beginTransmission(smcDeviceNumber);
-    Wire.write(cmd);
-    Wire.write(speed & 0x1F);
-    Wire.write(speed >> 5 & 0x7F);
-    Wire.endTransmission();
+    myWire.beginTransmission(smcDeviceNumber);
+    myWire.write(cmd);
+    myWire.write(speed & 0x1F);
+    myWire.write(speed >> 5 & 0x7F);
+    myWire.endTransmission();
 }
 
-// void Motor::slowAcceleration(const uint8_t motorNumber, uint8_t arrayIndex)
-// {
-
-// }

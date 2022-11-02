@@ -11,6 +11,4 @@ receiveFrame::receiveFrame(uint8_t rxPin, uint8_t txPin, uint16_t serialBaudrate
     this->rxPin = rxPin;
     this->txPin = txPin;
     this->serialBaudrate = serialBaudrate;
-
-    
 }
