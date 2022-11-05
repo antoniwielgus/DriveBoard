@@ -7,22 +7,29 @@
 #ifndef MOTOR
 #define MOTOR
 
-#include <Arduino.h>
-#include <Wire.h>
+#include <cstdint>
+#include <PololuSMC_G2Driver.h>
 
 class Motor
 {
 private:
-    TwoWire& myWire;
-    const uint8_t smcDeviceNumber = 1;
-    const int16_t maxSpeed = 2;
-    const int16_t minSpeed = 2;
+    PololuSMC_G2Driver& driver;
 
 public:
-    void exitSafeStart();
-    Motor(TwoWire& _myWire ,const uint8_t _smcDeviceNumber, const int16_t _maxSpeed, const int16_t _minSpeed);
-    void setMotorSpeed(int16_t speed);
-    void blinkLed(uint8_t ledPin);
+    Motor(PololuSMC_G2Driver& _driver) 
+        : driver(_driver)
+    {}
+
+    void setSpeed(int16_t speed)
+    {
+        driver.setSpeed(speed);
+    }
+
+    void exitSafeStart()
+    {
+        driver.exitSafeStart();
+    }
+
 };
 
 #endif
