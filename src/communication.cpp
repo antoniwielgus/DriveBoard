@@ -41,15 +41,21 @@ void Communication::receiveAndMergeBytes()
         conversion.charArray[1] = receivedData.buffer[10];
         RRW = conversion.mergedValue;
 
-        Serial.println(RRW);
+        // update last receive time
+        lastReceivedFrameTime_ms = millis();
     }
     else
         missedPackets++;
 }
 
+bool Communication::isCommunication()
+{
+    return ((millis() - lastReceivedFrameTime_ms) < CommLostTimeout_ms);
+}
+
 uint16_t Communication::getLFWspeed()
 {
-    return LFW - 3200;
+    return LFW - 3200; // TODO: remove magic number
 }
 
 uint16_t Communication::getRFWspeed()
