@@ -18,18 +18,18 @@ const uint8_t TX_pin = 4;
 const uint32_t DriveSerialBaudrate = 115200;
 const uint32_t SerialBaudrate = 115200;
 
-const uint8_t deviceAdress1 = 1;
-const uint8_t deviceAdress2 = 2;
-const uint8_t deviceAdress3 = 3;
-const uint8_t deviceAdress4 = 4;
-const uint8_t deviceAdress5 = 5;
-const uint8_t deviceAdress6 = 6;
+const uint8_t deviceAdress1 = 0x01;
+const uint8_t deviceAdress2 = 0x02;
+const uint8_t deviceAdress3 = 0x03;
+const uint8_t deviceAdress4 = 0x04;
+const uint8_t deviceAdress5 = 0x05;
+const uint8_t deviceAdress6 = 0x06;
 
 PololuSMC_G2Driver driverLF(Wire1, deviceAdress1);
 PololuSMC_G2Driver driverRF(Wire1, deviceAdress2);
 PololuSMC_G2Driver driverLM(Wire1, deviceAdress3);
-PololuSMC_G2Driver driverRM(Wire1 , deviceAdress4);
-PololuSMC_G2Driver driverLB(Wire1,deviceAdress5);
+PololuSMC_G2Driver driverRM(Wire1, deviceAdress4);
+PololuSMC_G2Driver driverLB(Wire1, deviceAdress5);
 PololuSMC_G2Driver driverRB(Wire1, deviceAdress6);
 
 Motor motorLF(driverLF);
