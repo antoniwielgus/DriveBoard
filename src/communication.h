@@ -37,10 +37,14 @@ private:
     uint16_t missedPackets = 0;
     uint8_tToUint16_t conversion;
 
+    uint32_t lastReceivedFrameTime_ms = 0;
+    static const uint32_t CommLostTimeout_ms = 1000;
 
 public:
     Communication(HardwareSerial* _serial);
     void receiveAndMergeBytes();
+
+    bool isCommunication();
 
 
     //this function return value between -3200 and 3200

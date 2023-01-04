@@ -9,7 +9,7 @@
 const int maxTasksAmount = 5;
 Tasker tasker(maxTasksAmount);
 
-const uint8_t ledPin = 25;
+const uint8_t commStatusLedPin = 25;
 
 const uint8_t SCL_pin = 3;
 const uint8_t SDA_pin = 2;
@@ -46,10 +46,6 @@ class : public IExecutable
     void execute() override
     {
         communication.receiveAndMergeBytes();
-
-        //Serial.println(communication.getLFWspeed());
-
-        
     }
 } receiveFrameTask;
 
@@ -57,20 +53,25 @@ class : public IExecutable
 {
     void execute() override
     {
-        if (Serial2.available())
-            digitalWrite(ledPin, HIGH);
+        if (communication.isCommunication())
+        {
+            motorLF.setSpeed(communication.getLFWspeed());
+        }
         else
-            digitalWrite(ledPin, LOW);
+        {
+            // disable all motors
+            motorLF.setSpeed(0);
+        }
     }
-} bliningLedTask;
+} driveTask;
 
 class : public IExecutable
 {
     void execute() override
     {
-        motorLF.setSpeed(communication.getLFWspeed());
+        digitalWrite(commStatusLedPin, communication.isCommunication());
     }
-} driveTask;
+} statusLedTask;
 
 
 //to do tasker
@@ -87,10 +88,10 @@ void setupCommunication()
 
     Serial.begin(SerialBaudrate);
 
-    pinMode(ledPin, OUTPUT);
+    pinMode(commStatusLedPin, OUTPUT);
 
-    tasker.addTask_Hz(&receiveFrameTask, 100.f);    
-    tasker.addTask_Hz(&bliningLedTask, 1.f);
+    tasker.addTask_Hz(&receiveFrameTask, 100.f);
     tasker.addTask_Hz(&driveTask, 100.f);
+    tasker.addTask_Hz(&statusLedTask, 1.f);
 }
 
